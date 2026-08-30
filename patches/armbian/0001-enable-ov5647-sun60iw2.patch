@@ -1,0 +1,32 @@
+diff --git a/config/kernel/linux-sun60iw2-vendor.config b/config/kernel/linux-sun60iw2-vendor.config
+index 8b3ac2b42..78e6c356d 100644
+--- a/config/kernel/linux-sun60iw2-vendor.config
++++ b/config/kernel/linux-sun60iw2-vendor.config
+@@ -335,6 +335,7 @@ CONFIG_SENSOR_GC05A2=m
+ # CONFIG_SENSOR_IMX386_2LANE is not set
+ # CONFIG_SENSOR_OV5640 is not set
+ # CONFIG_SENSOR_OV5648_MIPI is not set
++CONFIG_SENSOR_OV5647=m
+ # CONFIG_SENSOR_OV2775 is not set
+ # CONFIG_SENSOR_OV5675 is not set
+ # CONFIG_SENSOR_OV02A10 is not set
+diff --git a/patch/kernel/archive/sun60iw2-opi-vendor/0005-cubie-a7z-add-device-tree.patch b/patch/kernel/archive/sun60iw2-opi-vendor/0005-cubie-a7z-add-device-tree.patch
+index 81a206a9b..9db6f2040 100644
+--- a/patch/kernel/archive/sun60iw2-opi-vendor/0005-cubie-a7z-add-device-tree.patch
++++ b/patch/kernel/archive/sun60iw2-opi-vendor/0005-cubie-a7z-add-device-tree.patch
+@@ -128,13 +128,13 @@ index 0000000..0000002
+ +
+ +&pio {
+ +	uart0_pins_active: uart0_pins@0 {
+-+		pins = "", "";
+++		pins = "PB9", "PB10";
+ +		function = "uart0";
+ +		drive-strength = <10>;
+ +	};
+ +
+ +	uart0_pins_sleep: uart0_pins@1 {
+-+		pins = "", "";
+++		pins = "PB9", "PB10";
+ +		function = "gpio_in";
+ +		drive-strength = <10>;
+ +	};
