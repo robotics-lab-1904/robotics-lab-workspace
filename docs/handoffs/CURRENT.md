@@ -1,9 +1,14 @@
 # Current Handoff
 
-Last updated: 2026-08-29
+Last updated: 2026-08-30
 
 ## Current state
 
+- A non-destructive Git migration runbook has been prepared for adding Armbian
+  and the modified Orange Pi kernel as pinned submodules.
+- The existing Armbian checkout has two uncommitted OV5647-related edits.
+- The existing kernel checkout has three modified integration files and an
+  untracked `ov5647.c`; these changes have not yet been committed or pushed.
 - One OV5647 camera is operational on `/dev/video8`.
 - A 10000-frame V4L2 test succeeded at approximately 31.27 FPS with three DMA buffers.
 - FFmpeg MJPEG transfer works through a named FIFO.
@@ -14,11 +19,13 @@ Last updated: 2026-08-29
 
 ## Next recommended work
 
-1. Restart the updated server and verify the debug panel after a hard browser refresh.
-2. Measure actual FPS, bitrate, CPU load, temperature, and latency at 20, 25, and 30 output FPS.
-3. Validate `ov5647-stream.service` through a controlled reboot without enabling autostart first.
-4. Improve graceful FIFO/FFmpeg shutdown if a partial-frame warning remains.
-5. Update `camera-ov5647/OV5647_FULL_GUIDE_RU.md` or create an English replacement with the final implementation.
+1. Follow `docs/runbooks/GIT_SUBMODULE_AND_KERNEL_FORK.md`: create backups first,
+   then create and publish the kernel fork branch.
+2. Choose the Armbian preservation model: fork (recommended) or upstream
+   submodule plus a versioned patch.
+3. Add both submodules and validate them through a clean independent clone.
+4. Restart the updated camera server and verify the debug panel after a hard browser refresh.
+5. Measure actual FPS, bitrate, CPU load, temperature, and latency at 20, 25, and 30 output FPS.
 
 ## Stepper motor work pending on hardware
 
