@@ -4,11 +4,16 @@ Last updated: 2026-08-30
 
 ## Current state
 
-- A non-destructive Git migration runbook has been prepared for adding Armbian
-  and the modified Orange Pi kernel as pinned submodules.
-- The existing Armbian checkout has two uncommitted OV5647-related edits.
-- The existing kernel checkout has three modified integration files and an
-  untracked `ov5647.c`; these changes have not yet been committed or pushed.
+- `robotics-lab-workspace` is the active superproject at
+  `/home/artm1904/Program/Robot/robotics-lab-workspace`.
+- Four submodules are registered and pinned: camera, stepper motor, upstream
+  Armbian build, and the Orange Pi kernel fork.
+- The kernel submodule points to `robotics/ov5647-sun60iw2` at `4590a2f`.
+- The Armbian customization is stored as
+  `patches/armbian/0001-enable-ov5647-sun60iw2.patch`; the submodule remains an
+  upstream checkout and becomes dirty only when this patch is applied.
+- Internal Markdown navigation uses local relative links across superproject
+  and submodule boundaries; the recursive superproject checkout is canonical.
 - One OV5647 camera is operational on `/dev/video8`.
 - A 10000-frame V4L2 test succeeded at approximately 31.27 FPS with three DMA buffers.
 - FFmpeg MJPEG transfer works through a named FIFO.
@@ -19,11 +24,14 @@ Last updated: 2026-08-30
 
 ## Next recommended work
 
-1. Follow `docs/runbooks/GIT_SUBMODULE_AND_KERNEL_FORK.md`: create backups first,
-   then create and publish the kernel fork branch.
-2. Choose the Armbian preservation model: fork (recommended) or upstream
-   submodule plus a versioned patch.
-3. Add both submodules and validate them through a clean independent clone.
+1. Rotate the board SSH password because the previous credential existed in
+   commit `5f5ac26`; deleting it from the current files does not remove it from
+   Git history.
+2. Commit and push documentation corrections in each changed submodule, then
+   update and commit the corresponding superproject gitlink.
+3. Validate the complete workspace through a clean `--recurse-submodules`
+   clone and verify the Armbian patch with
+   `bash patches/armbian/apply_patch.sh --check`.
 4. Restart the updated camera server and verify the debug panel after a hard browser refresh.
 5. Measure actual FPS, bitrate, CPU load, temperature, and latency at 20, 25, and 30 output FPS.
 

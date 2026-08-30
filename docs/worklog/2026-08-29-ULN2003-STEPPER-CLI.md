@@ -1,5 +1,10 @@
 # ULN2003 Stepper Motor CLI
 
+> Historical path notice (2026-08-30): this report records work performed in
+> `/home/artm1904/Program/Robot/os`. The maintained local source is now the
+> `stepper-motor/` submodule of
+> `/home/artm1904/Program/Robot/robotics-lab-workspace`.
+
 - Date: 2026-08-29
 - Status: GPIO request/release validated; powered motion pending
 - Owner/agent: Codex

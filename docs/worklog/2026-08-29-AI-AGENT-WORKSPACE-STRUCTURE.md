@@ -1,5 +1,10 @@
 # AI-Agent Workspace Structure
 
+> Historical path notice (2026-08-30): this report records work performed in
+> `/home/artm1904/Program/Robot/os`. The active superproject is now
+> `/home/artm1904/Program/Robot/robotics-lab-workspace`; current paths are
+> documented in `docs/agent-context/PROJECT_MAP.md`.
+
 - Date: 2026-08-29
 - Status: Completed
 - Owner/agent: Codex
@@ -126,4 +131,3 @@ Relevant detailed reports should be read on demand rather than all at once.
 - Other subsystems should receive nested `AGENTS.md` only when they develop genuinely different commands or safety constraints.
 - A project `.codex/config.toml` was intentionally not added because no repository-specific model, sandbox, MCP, or hook setting was required.
 - Future work can add mechanical validation scripts or hooks after the report workflow has been exercised manually.
-

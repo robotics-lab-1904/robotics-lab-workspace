@@ -22,3 +22,10 @@ This directory contains durable knowledge for humans and AI agents.
 
 Use English for instructions, reports, filenames, commit messages, and newly created technical documentation unless the user explicitly requests another language.
 
+## Link policy
+
+Use local relative Markdown links for documents and files that exist in the
+canonical superproject checkout, including paths that cross into or out of a
+submodule. Keep HTTP URLs for external sources, Git clone/remotes, and historical
+command evidence. See
+[ADR-0003](decisions/ADR-0003-LOCAL-RELATIVE-DOCUMENTATION-LINKS.md).

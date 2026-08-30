@@ -1,14 +1,15 @@
 # Armbian Submodule and Orange Pi Kernel Fork
 
-- Last verified: 2026-08-30
+- Last verified: 2026-08-30 after migration
 - Workstation: `/home/artm1904/Program/Robot`
 - Organization: `robotics-lab-1904`
 - Superproject: `robotics-lab-workspace`
 
 ## Purpose
 
-This runbook moves the existing Armbian build checkout and modified Orange Pi
-kernel into a reproducible GitHub layout without losing local work.
+This runbook documents the completed repository layout and its ongoing
+submodule workflow. Migration-only commands are retained for historical
+recovery and are explicitly marked as legacy.
 
 The intended result is:
 
@@ -25,6 +26,10 @@ The optional branch entry in `.gitmodules` only supplies the default branch for
 `git submodule update --remote`; it does not replace the pinned commit.
 
 ## Verified initial state
+
+> Historical migration state: the paths in this section refer to the legacy
+> `/home/artm1904/Program/Robot/os` tree and must not be used as current
+> workspace paths.
 
 The following facts were observed locally before writing this runbook:
 
@@ -66,6 +71,9 @@ upstream  https://github.com/orangepi-xunlong/linux-orangepi.git
 
 ## Phase 1: Create recoverable backups
 
+> Legacy recovery procedure only. The active repositories now live under the
+> superproject paths documented in `docs/agent-context/PROJECT_MAP.md`.
+
 Run on the workstation. These commands do not modify either repository.
 
 ```bash
@@ -103,6 +111,9 @@ cloned and validated independently.
 
 ## Phase 2: Create the kernel fork on GitHub
 
+**Completed:** the fork is available at
+`https://github.com/robotics-lab-1904/linux-orangepi`.
+
 Open the upstream repository:
 
 ```text
@@ -122,6 +133,9 @@ GitHub CLI is not currently installed on the workstation, so the web workflow
 is the simplest option. Installing `gh` is not required for this migration.
 
 ## Phase 3: Preserve and publish the kernel changes
+
+**Completed:** the published branch is `robotics/ov5647-sun60iw2`, and the
+superproject currently pins commit `4590a2f8f1905931e6ca943d124d9f773df7cb52`.
 
 The current checkout has the upstream repository named `origin`. Rename that
 remote, then add the fork as the new `origin`:
@@ -185,6 +199,12 @@ The hashes printed by these commands must match.
 
 ## Phase 4: Preserve the Armbian changes
 
+**Selected model:** Model B. The active submodule points directly to upstream
+`armbian/build`; the customization is versioned at
+`patches/armbian/0001-enable-ov5647-sun60iw2.patch` and applied with
+`bash patches/armbian/apply_patch.sh`. Use `--check` to validate without
+modifying the submodule.
+
 The Armbian checkout cannot be replaced by a clean submodule while its two local
 changes are uncommitted. Choose one of the following models.
 
@@ -240,6 +260,8 @@ itself is clean and points to a buildable commit.
 
 ## Phase 5: Add clean submodules to the main workspace
 
+**Completed:** all four submodules are registered in `.gitmodules`.
+
 Only perform this phase after the relevant commits are available on GitHub.
 Do not move the existing 3.1 GiB and 2.3 GiB working trees into the main
 repository. Add fresh submodule checkouts instead.
@@ -290,6 +312,9 @@ git push origin main
 ```
 
 ## Phase 6: Validate with a clean clone
+
+This remains the required final validation after repository documentation and
+submodule pins are updated.
 
 Do not consider the migration complete until a second clone works without using
 either old checkout:
@@ -398,4 +423,3 @@ reset while unverified work exists.
 - [Git submodule documentation](https://git-scm.com/docs/git-submodule)
 - [GitHub: Fork a repository](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo)
 - [GitHub: Configure a remote for a fork](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/configuring-a-remote-repository-for-a-fork)
-

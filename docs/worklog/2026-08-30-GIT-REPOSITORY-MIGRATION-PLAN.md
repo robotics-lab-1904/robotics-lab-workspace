@@ -1,7 +1,7 @@
 # Git Repository Migration Plan
 
 - Date: 2026-08-30
-- Status: In progress
+- Status: Completed
 - Owner/agent: Codex
 - Related issue/task: Publish Armbian and modified Orange Pi kernel through the robotics lab superproject
 
@@ -147,6 +147,14 @@ A detailed runbook now defines safe backup, fork creation, remote configuration,
 targeted commits, submodule creation, clean-clone validation, daily use, upstream
 synchronization, and rollback.
 
+### Post-migration update — 2026-08-30
+
+The migration was subsequently completed. The active superproject is
+`/home/artm1904/Program/Robot/robotics-lab-workspace`; it pins the camera,
+stepper motor, upstream Armbian build, and the organization kernel fork as
+submodules. Legacy `/home/artm1904/Program/Robot/os` paths above are retained as
+historical evidence of the initial state and are not current operating paths.
+
 ## Limitations and open questions
 
 - The exact URL of the kernel fork is unknown until it is created.
@@ -186,4 +194,3 @@ the handoff if this plan should be discarded.
 - https://git-scm.com/docs/git-submodule
 - https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo
 - https://docs.github.com/en/pull-requests/how-tos/work-with-forks/configuring-a-remote-repository-for-a-fork
-

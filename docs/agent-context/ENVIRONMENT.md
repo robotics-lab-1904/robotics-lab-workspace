@@ -1,12 +1,20 @@
 # Lab Environment
 
-Last verified from the active work history: 2026-08-23. Re-verify before relying on these values.
+Last repository-layout verification: 2026-08-30. Hardware facts were last
+verified from active work on 2026-08-23; re-verify them before use.
 
 ## Local workstation
 
-- Workspace root: `/home/artm1904/Program/Robot/os`
+- Workspace root: `/home/artm1904/Program/Robot/robotics-lab-workspace`
 - Primary purpose: embedded Linux, robotics, ROS 2, camera, NPU, MCU, electronics, and algorithm experiments.
-- The workspace contains independent nested Git repositories. Check repository roots before running Git commands.
+- The workspace is a Git superproject with four pinned submodules. Check the
+  repository root and submodule status before Git operations.
+
+```bash
+git rev-parse --show-toplevel
+git status --short --branch
+git submodule status --recursive
+```
 
 ## Single-board computer
 
@@ -19,7 +27,7 @@ Last verified from the active work history: 2026-08-23. Re-verify before relying
 | Kernel | `6.6.98-vendor-sun60iw2` |
 | LAN address | `192.168.1.236` |
 | SSH | `root@192.168.1.236` |
-| SSH password | `1904` |
+| SSH authentication | Interactive secret; never store it in this repository |
 
  
 
@@ -76,4 +84,3 @@ The Armbian image may map `/var/log/journal` to `/var/log.hdd/journal`. Instanta
 - Network addresses, kernels, package versions, device nodes, and attached hardware are mutable facts.
 - Verify live state instead of trusting this document blindly.
 - The board is remotely accessible; avoid changes that can break boot without a tested rollback or physical recovery path.
-

@@ -16,4 +16,7 @@ The root `AGENTS.md` should link to stable context, not every report. Add report
 
 - [OV5647 camera bring-up](2026-08-23-OV5647-CAMERA-BRINGUP.md)
 - [AI-agent workspace structure](2026-08-29-AI-AGENT-WORKSPACE-STRUCTURE.md)
-
+- [ULN2003 stepper-motor CLI](2026-08-29-ULN2003-STEPPER-CLI.md)
+- [Git repository migration plan](2026-08-30-GIT-REPOSITORY-MIGRATION-PLAN.md)
+- [Workspace link and path migration](2026-08-30-WORKSPACE-LINK-AND-PATH-MIGRATION.md)
+- [Local relative documentation links](2026-08-30-LOCAL-RELATIVE-DOCUMENTATION-LINKS.md)
