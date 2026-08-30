@@ -1,0 +1,21 @@
+third_party/armbian-build
+	URL: https://github.com/armbian/build.git
+	branch: main
+
+
+third_party/linux-orangepi-sun60iw2
+	URL: https://github.com/robotics-lab-1904/linux-orangepi
+	branch: main
+	
+
+camera-ov5647
+    URL: https://github.com/robotics-lab-1904/camera-ov5647
+    branch: main
+
+
+stepper-motor
+	URL: https://github.com/robotics-lab-1904/stepper-motor
+	branch: main
+
+
+
