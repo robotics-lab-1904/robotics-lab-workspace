@@ -1,0 +1,19 @@
+[submodule "camera-ov5647"]
+    path = camera-ov5647
+    url = https://github.com/robotics-lab-1904/camera-ov5647.git
+    branch = main
+
+[submodule "stepper-motor"]
+    path = stepper-motor
+    url = https://github.com/robotics-lab-1904/stepper-motor.git
+    branch = main
+
+[submodule "third_party/armbian-build"]
+    path = third_party/armbian-build
+    url = https://github.com/armbian/build.git
+    branch = main
+
+[submodule "third_party/linux-orangepi-sun60iw2"]
+    path = third_party/linux-orangepi-sun60iw2
+    url = https://github.com/robotics-lab-1904/linux-orangepi.git
+    branch = robotics/ov5647-sun60iw2
