@@ -1,0 +1,114 @@
+#!/bin/sh
+set -eu
+
+runtime_dir="/run/ov5647-web"
+capture_pid_file="$runtime_dir/capture.pid"
+server_pid_file="$runtime_dir/server.pid"
+log_file="$runtime_dir/ov5647-web.log"
+port="${OV5647_WEB_PORT:-8080}"
+
+is_running() {
+	pid_file="$1"
+	[ -f "$pid_file" ] || return 1
+	pid="$(cat "$pid_file")"
+	[ -n "$pid" ] && kill -0 "$pid" 2>/dev/null
+}
+
+write_index() {
+	cat >"$runtime_dir/index.html" <<'EOF'
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Orange Pi — OV5647</title>
+  <style>
+    html,body { margin:0; min-height:100%; background:#111; color:#ddd; font:16px sans-serif; }
+    main { display:grid; place-items:center; gap:12px; padding:16px; }
+    img { display:block; max-width:100%; height:auto; border-radius:8px; background:#000; }
+    small { color:#999; }
+  </style>
+</head>
+<body>
+  <main>
+    <img id="camera" src="camera.png" alt="OV5647">
+    <small id="status">Обновление кадра…</small>
+  </main>
+  <script>
+    const image = document.getElementById('camera');
+    const status = document.getElementById('status');
+    function refresh() {
+      const next = new Image();
+      next.onload = () => {
+        image.src = next.src;
+        status.textContent = 'Обновлено: ' + new Date().toLocaleTimeString();
+      };
+      next.onerror = () => { status.textContent = 'Ожидание камеры…'; };
+      next.src = 'camera.png?t=' + Date.now();
+    }
+    setInterval(refresh, 2000);
+  </script>
+</body>
+</html>
+EOF
+}
+
+capture_loop() {
+	while :; do
+		if capture-ov5647 "$runtime_dir/camera.next.png"; then
+			mv "$runtime_dir/camera.next.png" "$runtime_dir/camera.png"
+		fi
+	sleep 1
+	done
+}
+
+start_service() {
+	mkdir -p "$runtime_dir"
+	write_index
+
+	if ! is_running "$capture_pid_file"; then
+		nohup "$0" _capture_loop >>"$log_file" 2>&1 &
+		echo "$!" >"$capture_pid_file"
+	fi
+
+	if ! is_running "$server_pid_file"; then
+		nohup python3 -m http.server "$port" --bind 0.0.0.0 \
+			--directory "$runtime_dir" >>"$log_file" 2>&1 &
+		echo "$!" >"$server_pid_file"
+	fi
+
+	echo "OV5647 web viewer: http://$(hostname -I | awk '{print $1}'):$port/"
+}
+
+stop_one() {
+	pid_file="$1"
+	if is_running "$pid_file"; then
+		kill "$(cat "$pid_file")"
+	fi
+	rm -f "$pid_file"
+}
+
+stop_service() {
+	mkdir -p "$runtime_dir"
+	stop_one "$capture_pid_file"
+	stop_one "$server_pid_file"
+	echo "OV5647 web viewer stopped"
+}
+
+show_status() {
+	if is_running "$capture_pid_file" && is_running "$server_pid_file"; then
+		echo "running: http://$(hostname -I | awk '{print $1}'):$port/"
+	else
+		echo "stopped"
+		return 1
+	fi
+}
+
+case "${1:-start}" in
+	start) start_service ;;
+	stop) stop_service ;;
+	restart) stop_service; start_service ;;
+	status) show_status ;;
+	_capture_loop) capture_loop ;;
+	*) echo "Usage: $0 {start|stop|restart|status}" >&2; exit 2 ;;
+esac

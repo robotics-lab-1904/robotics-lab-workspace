@@ -1,0 +1,25 @@
+#!/bin/sh
+set -eu
+
+device="${OV5647_DEVICE:-/dev/video8}"
+output="${1:-/tmp/ov5647.png}"
+raw_file="$(mktemp /tmp/ov5647.XXXXXX.nv12)"
+
+cleanup() {
+	rm -f "$raw_file"
+}
+trap cleanup EXIT INT TERM
+
+v4l2-ctl -d "$device" \
+	--set-input=0 \
+	--set-fmt-video=width=1280,height=720,pixelformat=NV12 \
+	--stream-mmap=3 \
+	--stream-skip=30 \
+	--stream-count=1 \
+	--stream-to="$raw_file"
+
+ffmpeg -hide_banner -loglevel error -y \
+	-f rawvideo -pixel_format nv12 -video_size 1280x720 \
+	-i "$raw_file" -frames:v 1 "$output"
+
+printf 'Saved OV5647 frame to %s\n' "$output"

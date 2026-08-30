@@ -1,0 +1,26 @@
+10  echo 'export TERM=xterm-256color' >> ~/.bashrc
+   11  ls
+   12  exit
+   13  armbian-config
+   14  sudo apt install micro
+   15  micro test.txt.
+   16  ls
+   17  MICRO_TRUECOLOR=1 micro test.txt. 
+   18  micro test.txt.
+   19  lacale
+   20  locale
+   21  sudo apt update && sudo apt install curl -y
+   22  export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F'"' '{print $4}')
+   23  curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb"
+   24  ls
+   25  sudo dpkg -i /tmp/ros2-apt-source.deb
+   26  ls
+   27  cat /etc/apt/sources.list.d/ubuntu.sources
+   28  grep Suites /etc/apt/sources.list.d/ubuntu.sources
+   29  sudo apt update
+   30  sudo apt install ros-dev-tools
+   31  sudo apt install ros-jazzy-ros-base
+   32  echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+   33  source ~/.bashrc
+   34  ls
+   35  l

@@ -1,0 +1,15 @@
+[Unit]
+Description=OV5647 browser MJPEG stream
+After=network-online.target systemd-modules-load.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=OV5647_STREAM_BUFFERS=3
+Environment=OV5647_STREAM_FPS=25
+ExecStart=/usr/local/bin/ov5647-stream-server
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

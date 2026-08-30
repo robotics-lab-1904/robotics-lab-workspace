@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+
+device="${OV5647_DEVICE:-/dev/video8}"
+count="${1:-}"
+
+case "$count" in
+	1|10|100|1000|10000) ;;
+	*)
+		echo "Usage: test-ov5647-stream {1|10|100|1000|10000}" >&2
+		exit 2
+		;;
+esac
+
+echo "OV5647 finite capture: device=$device buffers=3 frames=$count"
+v4l2-ctl -d "$device" \
+	--set-input=0 \
+	--set-fmt-video=width=1280,height=720,pixelformat=NV12 \
+	--stream-mmap=3 \
+	--stream-count="$count" \
+	--stream-to=/dev/null \
+	--verbose
+echo "OV5647 finite capture completed: frames=$count"

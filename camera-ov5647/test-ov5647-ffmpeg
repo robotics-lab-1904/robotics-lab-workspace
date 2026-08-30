@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+device="${OV5647_DEVICE:-/dev/video8}"
+count="${1:-}"
+runtime_dir="$(mktemp -d /tmp/ov5647-ffmpeg.XXXXXX)"
+raw_fifo="$runtime_dir/capture.nv12"
+encoder_pid=""
+
+cleanup() {
+	if [[ -n "$encoder_pid" ]] && kill -0 "$encoder_pid" 2>/dev/null; then
+		kill "$encoder_pid" 2>/dev/null || true
+		wait "$encoder_pid" 2>/dev/null || true
+	fi
+	rm -rf -- "$runtime_dir"
+}
+trap cleanup EXIT INT TERM
+
+case "$count" in
+	100|1000|10000) ;;
+	*)
+		echo "Usage: test-ov5647-ffmpeg {100|1000|10000}" >&2
+		exit 2
+		;;
+esac
+
+echo "OV5647 MJPEG encode test: device=$device buffers=3 frames=$count"
+mkfifo "$raw_fifo"
+
+ffmpeg -hide_banner -loglevel warning \
+	-f rawvideo -pixel_format nv12 -video_size 1280x720 -framerate 31.25 \
+	-i "$raw_fifo" \
+	-frames:v "$count" \
+	-c:v mjpeg -q:v 7 \
+	-f null - &
+encoder_pid="$!"
+
+v4l2-ctl -d "$device" \
+	--set-input=0 \
+	--set-fmt-video=width=1280,height=720,pixelformat=NV12 \
+	--stream-mmap=3 \
+	--stream-count="$count" \
+	--stream-to="$raw_fifo"
+
+wait "$encoder_pid"
+encoder_pid=""
+
+echo "OV5647 MJPEG encode test completed: frames=$count"
