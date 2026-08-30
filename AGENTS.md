@@ -24,13 +24,19 @@ Read only the reports relevant to the task. Do not load the entire history by de
 1. Inspect the current state before changing it. Hardware, OS images, kernels, device names, and network addresses may change.
 2. Make one logical change at a time and validate it proportionally to risk.
 3. Use staged experiments: detection → minimal operation → bounded load → sustained load → integration → service → autostart.
-4. Preserve user changes and independent nested repositories. Never assume the workspace root and nested Git repositories share history.
+4. Preserve user changes and submodule boundaries. Commit inside a submodule
+   first, then update its pinned gitlink in the superproject; never assume they
+   share history.
 5. Back up working DTBs, boot files, kernel modules, firmware, and service definitions before replacing them.
 6. Do not perform risky remote boot or hardware changes unless a recovery path is available.
 7. Never store passwords, tokens, private keys, or other secrets. Use placeholders such as `<PASSWORD>`.
 8. Use primary documentation, datasheets, schematics, reference manuals, official source code, and measured results where possible.
 9. Prefer `rg` and `rg --files` for local discovery.
 10. Keep generated binaries, raw captures, build outputs, and logs separate from source documentation when practical.
+11. Use local relative Markdown links for files available anywhere in the
+    canonical superproject checkout, including files across submodule
+    boundaries. Use HTTP links only for genuinely external resources, clone
+    URLs, remotes, or historical evidence.
 
 ## Documentation contract
 
@@ -74,4 +80,3 @@ Do not use `AGENTS.md` as a chronological log. Keep it short, stable, and action
 ## Scope-specific instructions
 
 Nested `AGENTS.md` files may add constraints for their subtree. Instructions closer to the edited file take precedence over this file where they conflict.
-
