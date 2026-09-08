@@ -17,3 +17,7 @@
     path = third_party/linux-orangepi-sun60iw2
     url = https://github.com/robotics-lab-1904/linux-orangepi.git
     branch = robotics/ov5647-sun60iw2
+[submodule "ros-packages"]
+	path = ros-packages
+	url = https://github.com/robotics-lab-1904/ros-packages.git
+	branch = main
