@@ -1,7 +1,8 @@
 # Lab Environment
 
-Last repository-layout verification: 2026-08-30. Hardware facts were last
-verified from active work on 2026-08-23; re-verify them before use.
+Last repository-layout verification: 2026-08-30. Relevant Orange Pi and
+stepper GPIO facts were reverified live on 2026-09-08; reverify mutable facts
+before use.
 
 ## Local workstation
 
@@ -27,7 +28,7 @@ git submodule status --recursive
 | Kernel | `6.6.98-vendor-sun60iw2` |
 | LAN address | `192.168.1.236` |
 | SSH | `root@192.168.1.236` |
-| SSH authentication | Interactive secret; never store it in this repository |
+| SSH authentication | SSH key authentication operational on 2026-09-08; never store secrets here |
 
  
 
@@ -78,6 +79,26 @@ journalctl -k -b -1
 ```
 
 The Armbian image may map `/var/log/journal` to `/var/log.hdd/journal`. Instantaneous power loss may still discard the final buffered records.
+
+## Stepper motor subsystem
+
+| Property | Verified value |
+|---|---|
+| Driver | ULN2003 board |
+| GPIO device | `/dev/gpiochip0` |
+| IN1 | Header 31 / PE13 / offset 141 |
+| IN2 | Header 33 / PD3 / offset 99 |
+| IN3 | Header 35 / PB6 / offset 38 |
+| IN4 | Header 37 / PD4 / offset 100 |
+| Python | 3.12.3 |
+| Python gpiod API | 1.6.3 |
+| Controller path on SBC | `/root/stepper-motor/stepper_cli.py` |
+
+The SoC-to-offset mapping and unclaimed pinctrl state were observed live on
+2026-09-08. The physical header mapping originates from the board pinout and
+user wiring. GPIO request/release was directly observed, and the user reported
+successful powered rotation on 2026-09-08. See
+[stepper compatibility](STEPPER_MOTOR_COMPATIBILITY.md).
 
 ## Safety and uncertainty
 
