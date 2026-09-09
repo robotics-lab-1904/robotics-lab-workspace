@@ -1,6 +1,6 @@
 # Current Handoff
 
-Last updated: 2026-08-30
+Last updated: 2026-09-09
 
 ## Current state
 
@@ -35,17 +35,45 @@ Last updated: 2026-08-30
 4. Restart the updated camera server and verify the debug panel after a hard browser refresh.
 5. Measure actual FPS, bitrate, CPU load, temperature, and latency at 20, 25, and 30 output FPS.
 
-## Stepper motor work pending on hardware
+## Stepper motor status
 
 - An interactive ULN2003 controller supporting the board's libgpiod 1.6.3 and
   newer 2.x APIs is deployed under `/root/stepper-motor/`; all three local tests,
   traced dry-run, and live zero-motion GPIO request/release pass.
 - Live pinctrl verified gpiochip0 offsets PE13=141, PD3=99, PB6=38, PD4=100 as
-  unclaimed. The physical header mapping still originates from the user pinout.
-- Start with 8 half-steps at 5 ms and stop on heat, unstable power, resets, or
-  unexpected behavior. See the task report for the exact staged procedure.
+  unclaimed. The user subsequently assembled the stated header-to-ULN2003
+  wiring and reported correct powered motor rotation on 2026-09-08.
+- Exact test parameters and measurements were not captured. Next motor work is
+  Stage 5 characterization: steps per output revolution, current, temperature,
+  load, reliable speed range, missed steps, and sustained operation. Stop on
+  heat, unstable power, resets, or unexpected behavior.
 
-## Constraints
+## ROS 2 Chapter 2 implementation
+
+- User selected Chapter 2 face tracking from Lentin Joseph's *ROS Robotics
+  Projects*, first edition (2017). Four packages now exist under `ros-packages`:
+  `lab_interfaces`, `lab_camera`, `lab_face_tracking`, `lab_stepper`.
+- Board Ubuntu 24.04/Jazzy verified through read-only SSH. Laptop Arch host has
+  a working Ubuntu 24.04.4 `ros-jazzy` Distrobox with Python 3.12.3/OpenCV 4.6.0.
+  No packages installed; rosdep initialized and its Jazzy index downloaded there.
+- Four packages build in Distrobox; 39 unit/integration tests pass, including
+  synthetic HTTP camera, real OpenCV/DDS, service arming and dry-run motion.
+  A 20-frame installed launch test exits cleanly. Generated files are ignored in
+  `ros-packages/.validation`; no source was deployed to the board.
+- `ros-packages` is an existing independent repository (HEAD `44d0c59`) with
+  a `.gitmodules` entry but no parent index gitlink yet. Source changes remain
+  uncommitted. Commit there first, then record its gitlink in the parent; do not
+  stage its source as ordinary superproject files. Git metadata was not changed.
+- Next: 100-frame real OV5647 vision test (no motor), split-machine DDS/clock
+  verification in dry-run, then observer-supervised eight-half-step integration.
+- Keep the existing MJPEG server as camera owner. Close browser image clients
+  before the ROS bridge connects. Motor defaults to simulated and disarmed;
+  explicit enable, source-age checks, watchdog and travel/session budgets apply.
+- [Build and staged operation guide](../../ros-packages/README.md)
+- [Implementation report](../worklog/2026-09-09-CHAPTER2-ROS2-FACE-TRACKING.md)
+- [ADR-0005](../decisions/ADR-0005-ROS2-FACE-TRACKING-BOUNDARIES.md)
+
+## Camera operating constraints
 
 - Keep `--stream-mmap=3`.
 - Keep selection, format, and streaming in one `v4l2-ctl` process.
@@ -59,3 +87,8 @@ Last updated: 2026-08-30
 - `docs/decisions/ADR-0001-OV5647-THREE-DMA-BUFFERS.md`
 - `docs/decisions/ADR-0002-OV5647-SINGLE-V4L2-SESSION-AND-FIFO.md`
 - `docs/worklog/2026-08-29-ULN2003-STEPPER-CLI.md`
+- [Stepper compatibility](../agent-context/STEPPER_MOTOR_COMPATIBILITY.md)
+- [Stepper runbook](../runbooks/ULN2003_STEPPER_MOTOR.md)
+- [ADR-0004: stepper libgpiod compatibility](../decisions/ADR-0004-STEPPER-LIBGPIOD-COMPATIBILITY.md)
+- [Documentation worklog](../worklog/2026-09-08-STEPPER-DOCUMENTATION-AND-COMPATIBILITY.md)
+- [Powered-motion validation](../worklog/2026-09-08-STEPPER-POWERED-MOTION-VALIDATION.md)
