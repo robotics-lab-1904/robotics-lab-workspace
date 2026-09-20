@@ -91,6 +91,13 @@ The words “right” and “left” are conventional: external coil order and v
 direction determine physical rotation. If movement is rough or only vibrates,
 stop with `q` and verify IN1–IN4 order rather than increasing current or speed.
 
+The ROS 2 `lab_stepper` path was also validated on 2026-09-19 with real GPIO,
+limits of ±8 estimated half-steps, a total session budget of 8, and a positive
+40 half-step/s command. The motor and attached camera moved right, the node
+stopped at exactly eight transitions, reported coils inactive, and released
+all GPIO consumers. This establishes positive/right polarity only for the
+current wiring, mount, viewing orientation, and unmirrored image.
+
 ## Stage 5: increase only after success
 
 Increase one variable at a time, for example `r 32`, then `r 128`. Retain the
@@ -101,8 +108,13 @@ For a typical geared motor, do not assume a steps-per-revolution value; gearbox
 ratios and manufacturing variants differ. Measure the output shaft and record
 the result in the worklog.
 
-Stage 5 remains unverified: no sustained-load, thermal, current, speed-limit,
-missed-step, or steps-per-revolution measurements have been recorded.
+On 2026-09-19, a ROS-isolated positive run of 200 half-steps at 40
+half-steps/s visibly moved the attached camera right and then automatically
+de-energized. Smaller 16- and 60-step runs were not visually apparent to the
+operator. This establishes a useful visible test scale for the current mount,
+but not its angle: steps per output revolution remains unmeasured. Sustained
+load, thermal behavior, current, speed limits, missed steps, and reverse travel
+at this scale remain unverified.
 
 ## Commands
 
@@ -137,6 +149,25 @@ Options:
 - Reversed direction: use the opposite command; direction names are relative.
 - Reset or SSH loss: disconnect motor power, retain Orange Pi power if safe,
   then inspect the persistent journal and power path.
+
+If software status counts steps but the motor is silent, slow the test to about
+2 half-steps/s and observe the ULN2003 indicators. Power down before touching
+any wiring:
+
+- Main power LED off: verify the separate regulated supply and measure VCC to
+  ULN2003 GND near 5 V.
+- IN1–IN4 LEDs do not sequence while kernel GPIO levels do: verify the four
+  Orange Pi signal wires and the Orange Pi-to-ULN2003 common ground.
+- IN1–IN4 LEDs sequence but the motor is silent: verify the motor plug, driver
+  outputs, supply under load, ULN2003 board, and motor continuity.
+- LEDs sequence and the motor hums or vibrates: stop, then verify phase order,
+  supply under load, mechanical binding, and compatible motor wiring.
+
+On 2026-09-19 a ROS slow diagnostic directly observed the kernel lines walking
+through the expected one- and two-phase pattern and reaching the eight-step
+session limit, while the user reported no camera movement. This excludes ROS
+graph delivery, the scheduler, GPIO ownership, and logical GPIO state from that
+specific failure; use the physical checks above before increasing limits.
 
 ## Shutdown and rollback
 

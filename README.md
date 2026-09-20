@@ -39,6 +39,7 @@ git submodule update --init --recursive
 - [Project map](docs/agent-context/PROJECT_MAP.md)
 - [Workflow](docs/agent-context/WORKFLOW.md)
 - [Current handoff](docs/handoffs/CURRENT.md)
+- [ROS 2 face tracking on Orange Pi](docs/runbooks/ROS2_FACE_TRACKING_ORANGE_PI.md)
 - [Submodule runbook](docs/runbooks/GIT_SUBMODULE_AND_KERNEL_FORK.md)
 - [ADR-0003: local relative documentation links](docs/decisions/ADR-0003-LOCAL-RELATIVE-DOCUMENTATION-LINKS.md)
 
